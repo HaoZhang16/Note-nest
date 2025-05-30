@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加书籍</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_book.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>添加书籍</h2>
+        <form action="/add_book" method="post" enctype="multipart/form-data">
+            <label>书名（必填）:</label>
+            <input type="text" name="title" required>
+
+            <label>作者:</label>
+            <input type="text" name="author">
+
+            <label>页数:</label>
+            <input type="number" name="total_page">
+
+            <label>上传封面（jpg/png/gif）:</label>
+            <input type="file" name="cover">
+
+            <input type="submit" value="提交">
+        </form>
+
+        <a href="/home">← 返回主页</a>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <p class="flash-message">{{ messages[0] }}</p>
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

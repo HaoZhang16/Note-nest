@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加笔记</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_note.css') }}">
+    <script>
+        function toggleSummaryOptions() {
+            let isSummary = document.getElementById("is_summary").checked;
+            document.getElementById("summary-options").style.display = isSummary ? "block" : "none";
+            document.getElementById("book-options").style.display = isSummary ? "none" : "block";
+            document.getElementById("tag-input-section").style.display = isSummary ? "none" : "block";
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>添加笔记</h2>
+
+        <form action="/add_note" method="post">
+            <label>引用：</label>
+            <textarea name="quote" rows="2"></textarea>
+
+            <label>笔记内容（必填）：</label>
+            <textarea name="content" rows="6" required></textarea>
+
+            <label>
+                <input type="checkbox" id="is_summary" name="is_summary" onchange="toggleSummaryOptions()">
+                总结笔记
+            </label>
+
+            <div id="book-options">
+                <label>关联书籍：</label>
+                <select name="related_book">
+                    <option value="">不关联</option>
+                    {% for book in books %}
+                        <option value="{{ book.book_id }}">{{ book.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="tag-input-section">
+                <label for="tag-input">添加标签（空格分割）：</label>
+                <input type="text" id="tag-input" placeholder="例如：文学 古代 思考">
+                <div id="tag-list"></div>
+                <input type="hidden" name="tags" id="tags-hidden"> <!-- 提交用 -->
+            </div>
+
+            <div id="summary-options" style="display: none;">
+                <label>总结主题（必填）：</label>
+                <input type="text" name="summary_topic">
+
+                <label>关联的笔记：</label>
+                <div class="checkbox-group">
+                    {% for note in notes %}
+                        <label>
+                            <input type="checkbox" name="related_notes" value="{{ note.note_id }}">
+                            {{ note.content[:30] }}...
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <input type="submit" value="提交">
+            <a href="/home">← 返回主页</a>
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <p class="flash-message">{{ messages[0] }}</p>
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+<script>
+    const tagInput = document.getElementById("tag-input");
+    const tagList = document.getElementById("tag-list");
+    const hiddenInput = document.getElementById("tags-hidden");
+
+    let tags = [];
+
+    tagInput.addEventListener("blur", handleTagInput);  // 失焦触发（可选）
+    tagInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleTagInput();
+        }
+    });
+
+    function handleTagInput() {
+        const raw = tagInput.value.trim();
+        if (raw) {
+            const newTags = raw.split(/\s+/).map(t => t.trim()).filter(t => t && !tags.includes(t));
+            tags.push(...newTags);
+            tags = [...new Set(tags)];  // 去重
+            renderTags();
+        }
+        tagInput.value = "";
+    }
+
+    function renderTags() {
+        tagList.innerHTML = "";
+        tags.forEach((tag, index) => {
+            const tagElement = document.createElement("span");
+            tagElement.textContent = tag;
+            tagElement.className = "tag";
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "×";
+            delBtn.onclick = () => {
+                tags.splice(index, 1);
+                renderTags();
+            };
+            tagElement.appendChild(delBtn);
+            tagList.appendChild(tagElement);
+        });
+        hiddenInput.value = JSON.stringify(tags); // 提交用
+    }
+</script>
+
+</html>

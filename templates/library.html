@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>书库</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
+</head>
+<body>
+    <h2>📖 所有书籍</h2>
+
+    <div class="book-grid">
+        {% for book in books %}
+            <div class="book-card" data-in-read="{{ 'true' if book.book_id in in_read_books else 'false' }}">
+                <img src="{{ url_for('static', filename=book.cover_path or 'covers/default_cover.jpg') }}"
+                     class="book-cover">
+
+                <div class="book-title">{{ book.title }}</div>
+                <div class="book-author">作者：{{ book.author or '未知作者' }}</div>
+                {% if book.total_page %}
+                    <div class="book-pages">页数：{{ book.total_page }}</div>
+                {% endif %}
+                <div class="book-status">
+                    {% if book.book_id in in_read_books %}
+                        ✅ 已在读
+                    {% else %}
+                        <form action="/mark_in_read" method="post">
+                            <input type="hidden" name="book_id" value="{{ book.book_id }}">
+                            <button type="submit">📌 标记在读</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div>
+                    <a class="back-link" href="/book/{{ book.book_id }}/notes">相关笔记</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a class="back-link" href="/home">← 返回主页</a>
+
+    <div class="filter-checkbox">
+        <label>
+            <input type="checkbox" id="is_in_read" name="is_in_read">
+            只看在读的书
+        </label>
+    </div>
+
+    <script>
+        const checkbox = document.getElementById("is_in_read");
+        checkbox.addEventListener("change", () => {
+            const inReadOnly = checkbox.checked;
+            document.querySelectorAll(".book-card").forEach(card => {
+                const isInRead = card.dataset.inRead === "true";
+                card.style.display = (!inReadOnly || isInRead) ? "flex" : "none";
+            });
+        });
+    </script>
+</body>
+</html>

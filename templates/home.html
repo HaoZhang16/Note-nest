@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<script>
+fetch("/contribution_data")
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("contribution-graph");
+    container.innerHTML = '';  // 清空旧数据
+    data.forEach(day => {
+        const cell = document.createElement("div");
+        cell.className = "graph-cell";
+        cell.dataset.count = Math.min(day.count, 6);  // 限制最大颜色等级
+        cell.title = `${day.date}: ${day.count} 条笔记`;
+        container.appendChild(cell);
+    });
+});
+</script>
+<body>
+    <div class="header">
+        <div>欢迎，{{ username }}</div>
+        <div class="header-actions">
+            <form action="/setting" method="post">
+                <button type="submit" class="setting-btn">设置</button>
+            </form>
+            <form action="/logout" method="post">
+                <button type="submit" class="logout-btn">退出登录</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 左侧操作区域 -->
+        <div class="left-panel">
+
+            <!-- 搜索框 -->
+            <form class="search-form" action="/search" method="get">
+                <input type="text" name="q" placeholder="搜索书籍/作者/笔记/标签/引文" required>
+                <select name="type">
+                    <option value="book">书籍</option>
+                    <option value="note">笔记</option>
+                </select>
+
+                <input type="submit" value="搜索">
+            </form>
+
+
+            <div class="button-and-heatmap">
+                <div class="btn-column">
+                    <form action="/add_book" method="get" class="btn-form">
+                        <input type="submit" value="添加书籍" class="btn">
+                    </form>
+                    <form action="/add_note" method="get" class="btn-form">
+                        <input type="submit" value="添加笔记" class="btn">
+                    </form>
+                    <form action="/notes" method="get" class="btn-form">
+                        <input type="submit" value="查看笔记" class="btn">
+                    </form>
+                    <form action="/review" method="get" class="btn-form">
+                        <input type="submit" value="开始复习" class="btn">
+                    </form>
+                </div>
+
+
+                <div id="contribution-graph" class="graph-grid"></div>
+            </div>
+            <!-- 好友列表 -->
+            <div class="friend-list">
+                <h4>👥 好友列表</h4>
+                {% if friends %}
+                    <ul class="friend-ul">
+                        {% for f in friends %}
+                            <li class="friend-item">
+                                <span class="friend-name">{{ f.user_name }}</span>
+                                <span class="note-time">最近创建: {{ f.latest_note_time }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>暂无好友</p>
+                {% endif %}
+
+                <hr>
+                <h5>添加好友</h5>
+                <form method="POST" action="{{ url_for('home.add_friend') }}">
+                    <input type="text" name="friend_name" placeholder="输入用户名" class="search-friend">
+                    <button type="submit" class="btn-add">添加</button>
+                </form>
+
+                {% if search_result %}
+                    <p>找到用户：{{ search_result.user_name }} ✅</p>
+                {% elif search_error %}
+                    <p style="color: red;">{{ search_error }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 右侧书库展示 -->
+        <div class="right-panel">
+            <h3>📚 书库</h3>
+            {% for book in books %}
+                <div class="book-item">
+                    <a href="{{ url_for('book.related_notes', book_id=book.book_id) }}">
+                        <img src="{{ url_for('static', filename=book.cover_path or 'covers/default_cover.jpg') }}" alt="封面">
+                    </a>
+                    <div class="book-title">{{ book.title }}</div>
+                </div>
+            {% endfor %}
+            <a class="link" href="/library">更多...</a>
+        </div>
+    </div>
+</body>
+</html>

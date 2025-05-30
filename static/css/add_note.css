@@ -1,0 +1,111 @@
+body {
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 60px auto;
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #34495e;
+}
+
+textarea,
+input[type="text"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    margin-right: 6px;
+}
+
+.checkbox-group label {
+    font-weight: normal;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+input[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+a {
+    display: inline-block;
+    margin-top: 15px;
+    text-align: center;
+    width: 100%;
+    text-decoration: none;
+    color: #2c3e50;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.flash-message {
+    color: green;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#tag-list .tag {
+    display: inline-block;
+    background-color: #e2e8f0;
+    border-radius: 6px;
+    padding: 3px 6px;
+    margin: 3px;
+    font-size: 13px;
+}
+#tag-list .tag button {
+    background: none;
+    border: none;
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.submit {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}

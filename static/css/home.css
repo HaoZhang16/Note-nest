@@ -1,0 +1,269 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f6f7;
+}
+
+.header {
+    padding: 15px 30px;
+    background-color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header form {
+    display: inline;
+}
+
+.main-container {
+    display: flex;
+    padding: 30px;
+}
+
+.left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.friend-list {
+    width: 80%;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 80px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.friend-list h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.friend-ul {
+    list-style: none;           /* 去掉原生点 */
+    padding: 0;
+    margin: 0;
+}
+
+.friend-item {
+    display: flex;
+    justify-content: space-between; /* 左右对齐 */
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #444;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.friend-item:hover {
+    background-color: #f0f8ff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.friend-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.note-time {
+    color: #888;
+    font-size: 12px;
+}
+
+
+.search-form {
+    margin: 80px;
+    text-align: center;
+}
+
+.search-form input[type="text"] {
+    padding: 8px 10px;
+    height: 30px;
+    width: 660px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 60px;
+}
+
+.search-form input[type="submit"] {
+    padding: 8px 14px;
+    background-color: #3498db;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.search-form input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+.btn-form {
+    margin: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.btn-add {
+    padding: 6px 10px;
+    font-size: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background-color: #45a049;
+}
+
+.right-panel {
+    width: 180px;
+    height: 520px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.right-panel h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.book-item {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.book-item img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.book-title {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.right-panel .link {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #3498db;
+    text-decoration: none;
+}
+
+.right-panel a:hover {
+    text-decoration: underline;
+}
+
+button.logout-btn {
+    color: red;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.logout-btn:hover {
+    text-decoration: underline;
+}
+
+button.setting-btn {
+    color: #3498db;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.setting-btn:hover {
+    text-decoration: underline;
+}
+
+.graph-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 24px);
+    grid-template-rows: repeat(5, 24px);
+    gap: 4px;
+    margin: 20px 0;
+}
+.graph-cell {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    transition: background-color 0.1s;
+}
+.graph-cell[data-count="0"] { background-color: #e0e0e0; }
+.graph-cell[data-count="1"] { background-color: #a2d5f2; }
+.graph-cell[data-count="2"] { background-color: #66b2ff; }
+.graph-cell[data-count="3"] { background-color: #3399ff; }
+.graph-cell[data-count="4"] { background-color: #0077cc; }
+.graph-cell[data-count="5"] { background-color: #005c99; }
+/* 超过5条笔记的颜色 */
+.graph-cell[data-count="6"] { background-color: #004066; }
+
+
+.button-and-heatmap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+.btn-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+select {
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.search-friend{
+    padding: 8px 10px;
+    height: 16px;
+    width: 120px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 60px;
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>笔记详情</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/note_details.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="note-detail">
+        <div class="head-block">
+            <h2>📄 笔记详情</h2>
+
+           {% if note.quote %}
+                <div class="quote-block">
+                    <i class="fa-solid fa-quote-left quote-icon"></i>
+                    <span class="quote-text">
+                        {{ note.quote }}
+                    </span>
+                    <i class="fa-solid fa-quote-right quote-icon"></i>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="markdown-body">{{ note.content|safe }}</div>
+
+        <!--        复习笔记-->
+        {% if flag == 2%}
+            <div class="review-sidebar">
+                <strong>上次复习：{{ ltime or "无"}}</strong>
+                <br><br>
+                <form method="POST" action="{{ url_for('review.submit_review') }}">
+                    <input type="hidden" name="note_id" value="{{ note.note_id }}">
+                    <label>你记得多清楚？（1~5 分）</label><br>
+                    {% for s in range(1, 6) %}
+                        <label><input type="radio" name="score" value="{{ s }}" required> {{ s }}</label>
+                    {% endfor %}
+                    <br><br>
+                    <button type="submit" class="submit-btn">提交复习结果</button>
+                </form>
+                <br>
+                <strong>剩余笔记：{{ remaining }}</strong>
+            </div>
+        {% endif %}
+
+        <div>
+            <div class="note-meta">创建时间：{{ note.create_time }}</div>
+        </div>
+
+        <!--        普通笔记-->
+        {% if flag == 0 %}
+        <div class="note-tags">
+            {% for tag in tags %}
+                <span class="tag">#{{ tag }}</span>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('note.edit_note', note_id=note.note_id) }}" class="btn-edit">编辑笔记</a>
+        <a href="{{ url_for('note.edit_note', note_id=note.note_id) }}" class="btn-edit">编辑标签</a>
+        {% endif %}
+
+        <!--        总结笔记-->
+        {% if flag == 1%}
+        <div class="review-sidebar">
+            <div class="links">
+                <h2>关联笔记</h2>
+                <div class="link-container">
+                    {% for link in links %}
+                        <a href="{{ url_for('note.note_detail', note_id=link.note_id) }}" class="link-card">
+                            📄 笔记 {{ link.note_id }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if flag == 3 %}
+        <div class="review-sidebar">
+                恭喜你完成复习~~<br>
+            <div class="note-meta">
+                下次复习时间：<br>
+                {{ nearest_time }}
+            </div>
+        </div>
+        <script>alert("全部复习完了哦");</script>
+        {% endif %}
+        <br>
+        <div class="link-container">
+            <a href="{{ url_for('note.notes') }}" class="back-link">← 返回笔记列表</a>
+            <a class="back-link" href="/home">← 返回主页</a>
+        </div>
+    </div>
+</body>
+</html>

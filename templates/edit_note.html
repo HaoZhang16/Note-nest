@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑笔记</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_note.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>✏️ 编辑笔记</h2>
+        <form method="POST" onsubmit="return confirm('确定要修改这条笔记吗？')">
+            <label>引用：</label>
+            <textarea name="quote" rows="12" cols="80">{{ note.quote }}</textarea><br><br>
+            <label>内容：</label>
+            <textarea name="content" rows="12" cols="80">{{ note.content }}</textarea><br><br>
+            <button type="submit" class="submit">保存修改</button>
+        </form>
+        <a href="{{ url_for('note.note_detail', note_id=note.note_id) }}">取消</a>
+    </div>
+</body>
+</html>

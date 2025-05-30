@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    {% if flag == 0%}
+    <title>我的笔记</title>
+    {% endif %}
+    {% if flag == 1%}
+    <title>本书笔记</title>
+    {% endif %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notes.css') }}">
+</head>
+<script>
+    function toggleShareForm(noteId) {
+        const form = document.getElementById("share-form-" + noteId);
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+</script>
+<body>
+    <h2>普通笔记</h2>
+    <ul>
+        {% for note in notes %}
+            <li class="note-card">
+                {% if note.quote %}
+                    <div class="quote-block">
+                        <i class="fa-solid fa-quote-left quote-icon"></i>
+                        <span class="quote-text">{{ note.quote }}</span>
+                        <i class="fa-solid fa-quote-right quote-icon"></i>
+                    </div>
+                {% endif %}
+                <div>{{ note.content.splitlines()[0][:40] }}{% if note.content|length > 40 %}...{% endif %}</div>
+                <div class="note-meta">创建时间：{{ note.create_time }}</div>
+                <div class="note-tags">
+                    {% for tag in note_tags[note.note_id] %}
+                        <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <a class="btn-view" href="/note/{{ note.note_id }}">查看详情</a>
+
+                <a class="btn-view" href="javascript:void(0);" onclick="toggleShareForm({{ note.note_id }})">分享笔记</a>
+
+                <form method="POST" action="{{ url_for('note.delete_note') }}" style="display:inline;" onsubmit="return confirm('确定要删除这条笔记吗？')">
+                    <input type="hidden" name="note_id" value="{{ note.note_id }}">
+                    <button type="submit" class="btn-delete">删除笔记</button>
+                </form>
+
+                                <!-- 分享表单（初始隐藏） -->
+                <div id="share-form-{{ note.note_id }}" class="share-form" style="display: none; margin-top: 10px;">
+                    <form method="POST" action="{{ url_for('note.share_note') }}">
+                        <input type="hidden" name="note_id" value="{{ note.note_id }}">
+
+                        <label>选择好友：</label>
+                        <select name="receiver_id" required>
+                            {% for friend in friends %}
+                                <option value="{{ friend.user_id }}">{{ friend.user_name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <label>权限：</label>
+                        <select name="permission">
+                            <option value="read">只读</option>
+                            <option value="write">可编辑</option>
+                            <option value="admin">完全控制</option>
+                        </select>
+
+                        <button type="submit" class="btn-view">确认分享</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if flag == 0 %}
+    <h2>总结笔记</h2>
+    <ul>
+        {% for note in snotes %}
+            <li class="note-card">
+                <strong>主题：</strong>{{ note.summary_topic }}<br>
+                {% if note.quote %}
+                    <blockquote>“{{ note.quote }}”</blockquote>
+                {% endif %}
+                <div>{{ note.content.splitlines()[0][:40] }}{% if note.content|length > 40 %}...{% endif %}</div>
+                <div class="note-meta">创建时间：{{ note.create_time }}</div>
+                <a class="btn-view" href="/snote/{{ note.note_id }}">查看详情</a>
+                <form method="POST" action="{{ url_for('note.delete_snote') }}" style="display:inline;" onsubmit="return confirm('确定要删除这条笔记吗？')">
+                    <input type="hidden" name="note_id" value="{{ note.note_id }}">
+                    <button type="submit" class="btn-delete">删除笔记</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>共享笔记</h2>
+    <ul>
+        {% for note in share_notes %}
+            <li class="note-card">
+                {% if note.quote %}
+                    <div class="quote-block">
+                        <i class="fa-solid fa-quote-left quote-icon"></i>
+                        <span class="quote-text">{{ note.quote }}</span>
+                        <i class="fa-solid fa-quote-right quote-icon"></i>
+                    </div>
+                {% endif %}
+                <div>{{ note.content.splitlines()[0][:40] }}{% if note.content|length > 40 %}...{% endif %}</div>
+                <div class="note-meta">
+                    分享者：{{ note.sender_name }}<br>
+                    创建时间：{{ note.create_time }}<br>
+                    分享时间：{{ note.share_time }}
+                </div>
+                <div class="note-tags">
+                    {% for tag in note_tags[note.note_id] %}
+                        <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <a class="btn-view" href="/note/{{ note.note_id }}">查看详情</a>
+
+                {% if note.permission == "admin"%}
+                <form method="POST" action="{{ url_for('note.delete_note') }}" style="display:inline;" onsubmit="return confirm('确定要删除这条笔记吗？')">
+                    <input type="hidden" name="note_id" value="{{ note.note_id }}">
+                    <button type="submit" class="btn-delete">删除笔记</button>
+                </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if flag == 1 %}
+    <div><a class="back-link" href="/library">← 返回书库</a></div>
+    {% endif %}
+
+    <a class="back-link" href="/home">← 返回主页</a>
+</body>
+</html>
