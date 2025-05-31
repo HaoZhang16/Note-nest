@@ -75,7 +75,7 @@ def add_note():
             cursor.execute("INSERT INTO summary (summary_note_id, note_id) VALUES (%s, %s)",
                            (new_summary_note_id, nid))
     else:
-        # 调用存储过程：插入 Note 并标记在读书籍（由过程完成）
+        # 调用存储过程：插入 Note 并标记在读书籍
         if related_book_id:
             cursor.execute("CALL AddNoteAndMarkInRead(%s, %s, %s, %s, %s, %s)", (
                 new_note_id,
@@ -83,7 +83,7 @@ def add_note():
                 content,
                 user_id,
                 create_time,
-                int(related_book_id)
+                related_book_id
             ))
 
             # 绑定笔记与书籍
@@ -103,7 +103,6 @@ def add_note():
             row = cursor.fetchone()
             if row:
                 tag_id = row[0]
-                # cursor.execute("UPDATE Tag SET use_count = use_count + 1 WHERE tag_id=%s", (tag_id,))
             else:
                 # 新建标签
                 cursor.execute("SELECT MAX(tag_id) FROM Tag")
